@@ -102,16 +102,27 @@ const ProductCard = ({ product }: { product: any }) => {
             Sold Out
           </Badge>
         )}
-        <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/90 backdrop-blur-sm flex justify-center">
+        <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/90 backdrop-blur-sm flex gap-2 justify-center">
           <Button 
             size="sm" 
-            className="w-full bg-[#006838] hover:bg-[#00502b] text-white rounded-full shadow-md"
+            className="flex-1 bg-[#006838] hover:bg-[#00502b] text-white rounded-full shadow-md"
             onClick={(e) => {
               e.preventDefault();
               // Add to cart logic
             }}
           >
             <ShoppingCart className="w-4 h-4 mr-2" /> Add to Cart
+          </Button>
+          <Button 
+            size="sm" 
+            variant="outline"
+            className="flex-1 border-[#006838] text-[#006838] hover:bg-[#006838] hover:text-white rounded-full shadow-md"
+            onClick={(e) => {
+              e.preventDefault();
+              // View details logic
+            }}
+          >
+            <ChevronRight className="w-4 h-4 mr-1" /> View Details
           </Button>
         </div>
       </div>
