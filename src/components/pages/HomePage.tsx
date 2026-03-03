@@ -185,8 +185,8 @@ const MegaMenu = ({ activeMenu, setActiveMenu }: { activeMenu: string | null, se
       }}
       onMouseLeave={() => setActiveMenu(null)}
     >
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-4 gap-8">
+      <div className="w-full px-4 py-8">
+        <div className="max-w-[100rem] mx-auto grid grid-cols-4 gap-8">
           {/* Featured Products */}
           <div className="border-r border-gray-100 pr-6">
             <h3 className="font-bold text-gray-900 mb-4 flex items-center">
