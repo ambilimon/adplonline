@@ -175,55 +175,52 @@ const SectionHeader = ({ title }: { title: string }) => (
 
 // Mega Menu Component
 const MegaMenu = ({ activeMenu, setActiveMenu }: { activeMenu: string | null, setActiveMenu: (menu: string | null) => void }) => {
+  if (!activeMenu) return null;
+
   return (
     <div
-      className="absolute top-full left-0 right-0 bg-white shadow-xl border-t border-gray-100 z-40 transform opacity-0 invisible -translate-y-2 transition-all duration-300"
-      style={{
-        opacity: activeMenu ? 1 : 0,
-        visibility: activeMenu ? 'visible' : 'hidden',
-        transform: activeMenu ? 'translateY(0)' : 'translateY(-10px)'
-      }}
+      className="absolute top-full left-0 right-0 bg-white shadow-2xl border-t border-gray-200 z-[9999]"
       onMouseLeave={() => setActiveMenu(null)}
     >
-      <div className="w-full px-4 py-8">
-        <div className="max-w-[100rem] mx-auto grid grid-cols-4 gap-8">
+      <div className="container mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Featured Products */}
-          <div className="border-r border-gray-100 pr-6">
-            <h3 className="font-bold text-gray-900 mb-4 flex items-center">
+          <div className="md:col-span-3 border-r border-gray-200 pr-6">
+            <h3 className="font-bold text-gray-900 mb-4 flex items-center text-sm uppercase tracking-wide">
               <Package className="w-4 h-4 mr-2 text-[#006838]" />
               Featured Products
             </h3>
             <ul className="space-y-3">
               {FEATURED_PRODUCTS.map((product, idx) => (
                 <li key={idx}>
-                  <a href={product.href} className="text-sm text-gray-600 hover:text-[#006838] transition-colors block">
+                  <a href={product.href} className="text-sm text-gray-700 hover:text-[#006838] transition-colors block py-1">
                     {product.name}
                   </a>
-                  <span className="text-xs text-[#006838] font-semibold">{product.price}</span>
+                  <span className="text-xs text-[#006838] font-bold">{product.price}</span>
                 </li>
               ))}
             </ul>
           </div>
 
           {/* Categories Grid */}
-          <div className="col-span-2 border-r border-gray-100 pr-6">
-            <h3 className="font-bold text-gray-900 mb-4 flex items-center">
+          <div className="md:col-span-6 border-r border-gray-200 pr-6">
+            <h3 className="font-bold text-gray-900 mb-4 flex items-center text-sm uppercase tracking-wide">
               <Grid className="w-4 h-4 mr-2 text-[#006838]" />
               Categories
             </h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               {MENU_CATEGORIES.map((category, idx) => (
                 <a
                   key={idx}
                   href={category.href}
-                  className="flex items-center p-3 rounded-lg hover:bg-green-50 transition-colors group"
+                  className="flex items-center p-2 rounded-lg hover:bg-green-50 transition-colors group"
                 >
-                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3 group-hover:bg-[#006838] transition-colors">
-                    <category.icon className="w-5 h-5 text-[#006838] group-hover:text-white" />
+                  <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3 group-hover:bg-[#006838] transition-colors flex-shrink-0">
+                    <category.icon className="w-4 h-4 text-[#006838] group-hover:text-white" />
                   </div>
-                  <div>
-                    <span className="font-medium text-gray-900 block">{category.name}</span>
-                    <span className="text-xs text-gray-500">{category.desc}</span>
+                  <div className="min-w-0">
+                    <span className="font-medium text-gray-900 block text-sm truncate">{category.name}</span>
+                    <span className="text-xs text-gray-500 truncate block">{category.desc}</span>
                   </div>
                 </a>
               ))}
@@ -231,27 +228,27 @@ const MegaMenu = ({ activeMenu, setActiveMenu }: { activeMenu: string | null, se
           </div>
 
           {/* Promo Banner */}
-          <div className="relative rounded-xl overflow-hidden h-full min-h-[200px]">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#006838] to-[#004d2a]">
+          <div className="md:col-span-3">
+            <div className="relative rounded-xl overflow-hidden bg-gradient-to-br from-[#006838] to-[#004d2a] h-full min-h-[180px]">
               <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '10px 10px' }}></div>
-            </div>
-            <div className="relative z-10 p-6 h-full flex flex-col justify-center text-white">
-              <h4 className="font-bold text-xl mb-2">New Arrivals</h4>
-              <p className="text-sm text-green-100 mb-4">Check out our latest laser & milling machine spares</p>
-              <Button size="sm" className="bg-white text-[#006838] hover:bg-green-50 w-fit">
-                Shop Now <ArrowRight className="w-4 h-4 ml-1" />
-              </Button>
+              <div className="relative z-10 p-5 h-full flex flex-col justify-center text-white">
+                <h4 className="font-bold text-lg mb-2">New Arrivals</h4>
+                <p className="text-sm text-green-100 mb-4">Check out our latest laser & milling machine spares</p>
+                <Button size="sm" className="bg-white text-[#006838] hover:bg-green-50 w-fit">
+                  Shop Now <ArrowRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Quick Links Footer */}
-        <div className="mt-6 pt-4 border-t border-gray-100 flex gap-6">
-          <a href="/products" className="text-sm text-gray-500 hover:text-[#006838] transition-colors">All Products</a>
-          <a href="/products/cnc" className="text-sm text-gray-500 hover:text-[#006838] transition-colors">CNC Machines</a>
-          <a href="/products/laser" className="text-sm text-gray-500 hover:text-[#006838] transition-colors">Laser Machines</a>
-          <a href="/products/milling" className="text-sm text-gray-500 hover:text-[#006838] transition-colors">Milling Machines</a>
-          <a href="/products/edm" className="text-sm text-gray-500 hover:text-[#006838] transition-colors">EDM Machines</a>
+        <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap gap-4">
+          <a href="/products" className="text-xs text-gray-500 hover:text-[#006838] transition-colors">All Products</a>
+          <a href="/products/cnc" className="text-xs text-gray-500 hover:text-[#006838] transition-colors">CNC Machines</a>
+          <a href="/products/laser" className="text-xs text-gray-500 hover:text-[#006838] transition-colors">Laser Machines</a>
+          <a href="/products/milling" className="text-xs text-gray-500 hover:text-[#006838] transition-colors">Milling Machines</a>
+          <a href="/products/edm" className="text-xs text-gray-500 hover:text-[#006838] transition-colors">EDM Machines</a>
         </div>
       </div>
     </div>
