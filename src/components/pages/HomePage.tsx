@@ -1,11 +1,11 @@
 // WI-HPI
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
-import { 
-  ShoppingCart, Search, User, Menu, Phone, Mail, 
-  Facebook, Linkedin, Twitter, Instagram, ChevronRight, 
+import {
+  ShoppingCart, Search, User, Menu, Phone, Mail,
+  Facebook, Linkedin, Twitter, Instagram, ChevronRight, ChevronDown,
   Star, ShieldCheck, RefreshCw, Truck, Lock, ArrowRight,
-  CheckCircle2, X
+  CheckCircle2, X, Grid, Package, Zap, Settings
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +15,22 @@ import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { Image } from '@/components/ui/image';
+
+// Mega Menu Data
+const MENU_CATEGORIES = [
+  { name: 'CNC Machines', href: '/products/cnc', icon: Grid, desc: 'Precision CNC spares' },
+  { name: 'Laser Machines', href: '/products/laser', icon: Zap, desc: 'Laser optics & parts' },
+  { name: 'Milling Machines', href: '/products/milling', icon: Settings, desc: 'Milling components' },
+  { name: 'EDM Machines', href: '/products/edm', icon: ChevronDown, desc: 'EDM wire & electrodes' },
+  { name: 'Machine Spares', href: '/products/spares', icon: Package, desc: 'Universal spares' },
+  { name: 'Accessories', href: '/products/accessories', icon: Settings, desc: 'Tools & accessories' },
+];
+
+const FEATURED_PRODUCTS = [
+  { name: 'LENS 220 (1064mm)', href: '/product/lens-220', price: '₹7,500' },
+  { name: 'Galvo Scanner', href: '/product/galvo-scanner', price: '₹22,500' },
+  { name: 'Clock Spring', href: '/product/clock-spring', price: '₹2,250' },
+];
 
 // --- Constants & Theme ---
 const BRAND_GREEN = '#006838'; // Derived from screenshot
@@ -73,11 +89,11 @@ const AnimatedSection = ({ children, className, delay = 0 }: { children: React.R
   const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   return (
-    <div 
+    <div
       ref={ref}
       className={cn("transition-all duration-700 ease-out", className)}
-      style={{ 
-        opacity: isInView ? 1 : 0, 
+      style={{
+        opacity: isInView ? 1 : 0,
         transform: isInView ? 'translateY(0)' : 'translateY(30px)',
         transitionDelay: `${delay}ms`
       }}
@@ -103,8 +119,8 @@ const ProductCard = ({ product }: { product: any }) => {
           </Badge>
         )}
         <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-white/90 backdrop-blur-sm flex gap-2 justify-center">
-          <Button 
-            size="sm" 
+          <Button
+            size="sm"
             className="flex-1 bg-[#006838] hover:bg-[#00502b] text-white rounded-full shadow-md"
             onClick={(e) => {
               e.preventDefault();
@@ -113,8 +129,8 @@ const ProductCard = ({ product }: { product: any }) => {
           >
             <ShoppingCart className="w-4 h-4 mr-2" /> Add to Cart
           </Button>
-          <Button 
-            size="sm" 
+          <Button
+            size="sm"
             variant="outline"
             className="flex-1 border-[#006838] text-[#006838] hover:bg-[#006838] hover:text-white rounded-full shadow-md"
             onClick={(e) => {
@@ -157,11 +173,131 @@ const SectionHeader = ({ title }: { title: string }) => (
   </div>
 );
 
+// Mega Menu Component
+const MegaMenu = ({ activeMenu, setActiveMenu }: { activeMenu: string | null, setActiveMenu: (menu: string | null) => void }) => {
+  return (
+    <div
+      className="absolute top-full left-0 right-0 bg-white shadow-xl border-t border-gray-100 z-40 transform opacity-0 invisible -translate-y-2 transition-all duration-300"
+      style={{
+        opacity: activeMenu ? 1 : 0,
+        visibility: activeMenu ? 'visible' : 'hidden',
+        transform: activeMenu ? 'translateY(0)' : 'translateY(-10px)'
+      }}
+      onMouseLeave={() => setActiveMenu(null)}
+    >
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-4 gap-8">
+          {/* Featured Products */}
+          <div className="border-r border-gray-100 pr-6">
+            <h3 className="font-bold text-gray-900 mb-4 flex items-center">
+              <Package className="w-4 h-4 mr-2 text-[#006838]" />
+              Featured Products
+            </h3>
+            <ul className="space-y-3">
+              {FEATURED_PRODUCTS.map((product, idx) => (
+                <li key={idx}>
+                  <a href={product.href} className="text-sm text-gray-600 hover:text-[#006838] transition-colors block">
+                    {product.name}
+                  </a>
+                  <span className="text-xs text-[#006838] font-semibold">{product.price}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Categories Grid */}
+          <div className="col-span-2 border-r border-gray-100 pr-6">
+            <h3 className="font-bold text-gray-900 mb-4 flex items-center">
+              <Grid className="w-4 h-4 mr-2 text-[#006838]" />
+              Categories
+            </h3>
+            <div className="grid grid-cols-2 gap-4">
+              {MENU_CATEGORIES.map((category, idx) => (
+                <a
+                  key={idx}
+                  href={category.href}
+                  className="flex items-center p-3 rounded-lg hover:bg-green-50 transition-colors group"
+                >
+                  <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3 group-hover:bg-[#006838] transition-colors">
+                    <category.icon className="w-5 h-5 text-[#006838] group-hover:text-white" />
+                  </div>
+                  <div>
+                    <span className="font-medium text-gray-900 block">{category.name}</span>
+                    <span className="text-xs text-gray-500">{category.desc}</span>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Promo Banner */}
+          <div className="relative rounded-xl overflow-hidden h-full min-h-[200px]">
+            <div className="absolute inset-0 bg-gradient-to-br from-[#006838] to-[#004d2a]">
+              <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '10px 10px' }}></div>
+            </div>
+            <div className="relative z-10 p-6 h-full flex flex-col justify-center text-white">
+              <h4 className="font-bold text-xl mb-2">New Arrivals</h4>
+              <p className="text-sm text-green-100 mb-4">Check out our latest laser & milling machine spares</p>
+              <Button size="sm" className="bg-white text-[#006838] hover:bg-green-50 w-fit">
+                Shop Now <ArrowRight className="w-4 h-4 ml-1" />
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Links Footer */}
+        <div className="mt-6 pt-4 border-t border-gray-100 flex gap-6">
+          <a href="/products" className="text-sm text-gray-500 hover:text-[#006838] transition-colors">All Products</a>
+          <a href="/products/cnc" className="text-sm text-gray-500 hover:text-[#006838] transition-colors">CNC Machines</a>
+          <a href="/products/laser" className="text-sm text-gray-500 hover:text-[#006838] transition-colors">Laser Machines</a>
+          <a href="/products/milling" className="text-sm text-gray-500 hover:text-[#006838] transition-colors">Milling Machines</a>
+          <a href="/products/edm" className="text-sm text-gray-500 hover:text-[#006838] transition-colors">EDM Machines</a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Mobile Mega Menu
+const MobileMegaMenu = () => {
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+
+  return (
+    <div className="flex flex-col space-y-2">
+      {MENU_CATEGORIES.map((category, idx) => (
+        <div key={idx} className="border-b border-gray-100 pb-2">
+          <button
+            onClick={() => setExpandedCategory(expandedCategory === category.name ? null : category.name)}
+            className="w-full flex items-center justify-between py-2 text-gray-700 hover:text-[#006838]"
+          >
+            <span className="font-medium">{category.name}</span>
+            <ChevronDown className={cn("w-4 h-4 transition-transform", expandedCategory === category.name && "rotate-180")} />
+          </button>
+          {expandedCategory === category.name && (
+            <div className="pl-4 mt-2 space-y-2">
+              <p className="text-sm text-gray-500">{category.desc}</p>
+              <a href={category.href} className="block text-sm text-[#006838] hover:underline">
+                View All {category.name} →
+              </a>
+              {FEATURED_PRODUCTS.slice(0, 2).map((product, pIdx) => (
+                <a key={pIdx} href={product.href} className="block pl-2 py-1 text-sm text-gray-600 hover:text-[#006838]">
+                  • {product.name} ({product.price})
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
 // --- Main Page Component ---
 
 export default function HomePage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -171,7 +307,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-900 flex flex-col">
-      
+
       {/* Top Bar */}
       <div className="bg-[#006838] text-white py-2 text-xs md:text-sm hidden md:block">
         <div className="container mx-auto px-4 flex justify-between items-center">
@@ -191,7 +327,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Main Header */}
+      {/* Main Header with Mega Menu */}
       <header className={cn("sticky top-0 z-50 bg-white transition-all duration-300 border-b border-gray-100", isScrolled ? "shadow-md py-2" : "py-4")}>
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between gap-4">
@@ -208,9 +344,9 @@ export default function HomePage() {
 
             {/* Search Bar - Desktop */}
             <div className="hidden md:flex flex-1 max-w-xl mx-8 relative">
-              <Input 
-                type="text" 
-                placeholder="Search for products..." 
+              <Input
+                type="text"
+                placeholder="Search for products..."
                 className="w-full pl-4 pr-12 py-5 rounded-full border-gray-200 focus:border-[#006838] focus:ring-1 focus:ring-[#006838] bg-gray-50"
               />
               <Button size="icon" className="absolute right-1 top-1 bottom-1 rounded-full bg-[#006838] hover:bg-[#00502b] w-8 h-8 my-auto">
@@ -238,11 +374,11 @@ export default function HomePage() {
                 <SheetContent side="left" className="w-[300px]">
                   <div className="flex flex-col gap-6 mt-8">
                     <Input placeholder="Search..." />
-                    <nav className="flex flex-col space-y-4">
-                      <a href="#" className="text-lg font-medium hover:text-[#006838]">Home</a>
-                      <a href="#" className="text-lg font-medium hover:text-[#006838]">Shop</a>
-                      <a href="#" className="text-lg font-medium hover:text-[#006838]">Categories</a>
-                      <a href="#" className="text-lg font-medium hover:text-[#006838]">Contact</a>
+                    <nav className="flex flex-col space-y-2">
+                      <a href="#" className="text-lg font-medium hover:text-[#006838] py-2 border-b border-gray-100">Home</a>
+                      <MobileMegaMenu />
+                      <a href="#" className="text-lg font-medium hover:text-[#006838] py-2 border-b border-gray-100">About Us</a>
+                      <a href="#" className="text-lg font-medium hover:text-[#006838] py-2 border-b border-gray-100">Contact</a>
                     </nav>
                   </div>
                 </SheetContent>
@@ -250,14 +386,25 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center justify-center space-x-8 mt-4 text-sm font-medium text-gray-600">
-            <a href="#" className="hover:text-[#006838] transition-colors">Home</a>
-            <a href="#" className="hover:text-[#006838] transition-colors">Laser Machines</a>
-            <a href="#" className="hover:text-[#006838] transition-colors">Milling Machines</a>
-            <a href="#" className="hover:text-[#006838] transition-colors">Spares</a>
-            <a href="#" className="hover:text-[#006838] transition-colors">About Us</a>
-            <a href="#" className="hover:text-[#006838] transition-colors">Contact</a>
+          {/* Desktop Navigation with Mega Menu */}
+          <nav className="hidden md:flex items-center justify-center mt-4 text-sm font-medium text-gray-600 relative">
+            <a href="#" className="hover:text-[#006838] transition-colors px-4 py-2">Home</a>
+
+            {/* Mega Menu Trigger */}
+            <div
+              className="relative"
+              onMouseEnter={() => setActiveMenu('products')}
+              onMouseLeave={() => setActiveMenu(null)}
+            >
+              <button className="flex items-center hover:text-[#006838] transition-colors px-4 py-2">
+                Products <ChevronDown className={cn("w-4 h-4 ml-1 transition-transform", activeMenu === 'products' && "rotate-180")} />
+              </button>
+              <MegaMenu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+            </div>
+
+            <a href="#" className="hover:text-[#006838] transition-colors px-4 py-2">Spares</a>
+            <a href="#" className="hover:text-[#006838] transition-colors px-4 py-2">About Us</a>
+            <a href="#" className="hover:text-[#006838] transition-colors px-4 py-2">Contact</a>
           </nav>
         </div>
       </header>
@@ -268,8 +415,8 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-r from-gray-100 via-gray-100 to-gray-900 z-0">
           <div className="absolute right-0 top-0 w-full md:w-2/3 h-full bg-[#111] transform -skew-x-12 translate-x-20 md:translate-x-40 origin-top"></div>
           {/* Hexagon Pattern Overlay */}
-          <div className="absolute right-0 top-0 w-1/2 h-full opacity-10" 
-               style={{ backgroundImage: 'radial-gradient(#006838 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+          <div className="absolute right-0 top-0 w-1/2 h-full opacity-10"
+            style={{ backgroundImage: 'radial-gradient(#006838 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10 grid md:grid-cols-2 gap-12 items-center h-full py-12">
@@ -285,7 +432,7 @@ export default function HomePage() {
               Premium Quality
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-              Power Up <br/>
+              Power Up <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600">Your Machines</span>
             </h1>
             <p className="text-gray-400 text-lg mb-8 max-w-lg mx-auto md:mx-0">
@@ -307,7 +454,7 @@ export default function HomePage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="container mx-auto px-4">
           <SectionHeader title="Laser Machines" />
-          
+
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Product Grid (Left) */}
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -345,7 +492,7 @@ export default function HomePage() {
             <h2 className="text-3xl font-bold mb-4">Shop By Categories</h2>
             <div className="w-24 h-1 bg-[#006838] mx-auto rounded-full"></div>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
             {CATEGORIES.map((cat, idx) => (
               <AnimatedSection key={cat.id} delay={idx * 100}>

@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider, Navigate, Outlet } from 'react-rou
 import { ScrollToTop } from '@/lib/scroll-to-top';
 import ErrorPage from '@/integrations/errorHandlers/ErrorPage';
 import HomePage from './pages/HomePage';
+import ProductDetailPage from './pages/ProductDetailPage';
 
 // Layout component that includes ScrollToTop
 function Layout() {
@@ -25,6 +26,55 @@ const router = createBrowserRouter([
         element: <HomePage />,
         routeMetadata: {
           pageIdentifier: 'home',
+        },
+      },
+      {
+        path: "product/:slug",
+        element: <ProductDetailPage />,
+        routeMetadata: {
+          pageIdentifier: 'product-detail',
+        },
+      },
+      {
+        path: "products",
+        element: <HomePage />,
+        routeMetadata: {
+          pageIdentifier: 'products',
+        },
+      },
+      {
+        path: "products/:category",
+        element: <HomePage />,
+        routeMetadata: {
+          pageIdentifier: 'products-category',
+        },
+      },
+      {
+        path: "category/:type/:slug",
+        element: <HomePage />,
+        routeMetadata: {
+          pageIdentifier: 'category',
+        },
+      },
+      {
+        path: "about-us",
+        element: <HomePage />,
+        routeMetadata: {
+          pageIdentifier: 'about',
+        },
+      },
+      {
+        path: "contact-us",
+        element: <HomePage />,
+        routeMetadata: {
+          pageIdentifier: 'contact',
+        },
+      },
+      {
+        path: "blog",
+        element: <HomePage />,
+        routeMetadata: {
+          pageIdentifier: 'blog',
         },
       },
       {
